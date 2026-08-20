@@ -207,7 +207,7 @@
     <div class="answer-reveal">
       <div class="rq" id="rv-q"></div>
       <div class="rt" id="rv-title"></div>
-      <button onclick="playReveal(H.q)">▶ 후렴 12초 다시 듣기</button>
+      <button onclick="playReveal(H.q)">▶ 후렴 20초 다시 듣기</button>
     </div>
   </section>
 
@@ -480,7 +480,7 @@ function renderGrade() {
   $("gr-reveals").innerHTML = SONGS.map((song) => `
     <button class="reveal-item" onclick="playReveal(${song.q})">
       <b>${song.q}.</b> ${escapeHtml(song.title)}
-      <small>▶ 후렴 12초 듣기</small>
+      <small>▶ 후렴 20초 듣기</small>
     </button>`).join("");
 
   const rows = [];
