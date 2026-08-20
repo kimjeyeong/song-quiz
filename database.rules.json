@@ -1,0 +1,10 @@
+{
+  "rules": {
+    "rooms": {
+      "0691": {
+        ".read": true,
+        ".write": true
+      }
+    }
+  }
+}
