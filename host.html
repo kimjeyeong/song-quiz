@@ -50,8 +50,6 @@
     margin-left: auto; font-size: 14px; color: var(--muted);
     background: var(--panel); padding: 9px 15px; border-radius: 10px;
   }
-  .secret b { color: var(--glow); font-size: 17px; }
-
   .playbtns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 22px 0 26px; }
   .playbtns button {
     padding: 26px 10px; background: var(--panel); color: var(--white);
@@ -129,7 +127,7 @@
     <div class="playhead">
       <span class="qn" id="pl-q">1</span>
       <span class="of" id="pl-of">/ 15</span>
-      <span class="secret">정답 <b id="pl-answer"></b></span>
+      <span class="secret">정답은 채점할 때 공개됩니다</span>
     </div>
 
     <div class="playbtns">
@@ -355,7 +353,6 @@ function render() {
     const song = SONGS[H.q - 1] || {};
     $("pl-q").textContent = H.q;
     $("pl-of").textContent = `/ ${SONGS.length}`;
-    $("pl-answer").textContent = song.title || "";
     document.querySelectorAll(".playbtns button").forEach((b) => {
       b.classList.toggle("on", +b.dataset.stage === H.stage);
     });
