@@ -83,6 +83,14 @@
   }
   .mark.ok { background: var(--ok); color: #05291d; }
   .mark.no { background: var(--panel-2); color: var(--no); }
+  .reveal-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 14px 0 24px; }
+  .reveal-item {
+    padding: 10px 12px; background: var(--panel); color: var(--white);
+    border: 2px solid var(--panel-2); text-align: left; font-size: 13px;
+  }
+  .reveal-item:hover { border-color: var(--glow); }
+  .reveal-item b { color: var(--amber); }
+  .reveal-item small { display: block; color: var(--glow); margin-top: 4px; }
 
   /* 결과 */
   .podium { display: grid; gap: 11px; max-width: 780px; margin: 0 auto; }
@@ -143,6 +151,7 @@
   <!-- 채점 -->
   <section id="view-grade" class="hidden">
     <h2 class="sec" style="font-size:19px;color:var(--white);">채점 확인 — 잘못 판정된 답을 눌러서 바꿔주세요</h2>
+    <div class="reveal-grid" id="gr-reveals"></div>
     <table class="grade">
       <thead><tr><th></th><th>팀</th><th>제출한 답</th><th>정답</th><th>단계</th><th>판정</th></tr></thead>
       <tbody id="gr-body"></tbody>
@@ -280,8 +289,8 @@ function playStage(s) {
   p.play().catch(() => {});
 }
 
-function playReveal() {
-  const song = SONGS[H.q - 1];
+function playReveal(q) {
+  const song = SONGS.find((s) => String(s.q) === String(q));
   if (!song) return;
   const p = $("player");
   p.src = song.clips.reveal;
@@ -325,7 +334,6 @@ function prev() {
 document.addEventListener("keydown", (e) => {
   if (e.target.tagName === "INPUT") return;
   if (H.phase === "playing" && ["1", "2", "3"].includes(e.key)) { playStage(+e.key - 1); e.preventDefault(); }
-  else if (e.key === "0" && H.phase === "playing") { playReveal(); e.preventDefault(); }
   else if (e.key === "ArrowRight") { next(); e.preventDefault(); }
   else if (e.key === "ArrowLeft") { prev(); e.preventDefault(); }
 });
@@ -392,6 +400,12 @@ function render() {
 }
 
 function renderGrade() {
+  $("gr-reveals").innerHTML = SONGS.map((song) => `
+    <button class="reveal-item" onclick="playReveal(${song.q})">
+      <b>${song.q}.</b> ${escapeHtml(song.title)}
+      <small>▶ 후렴 8초 듣기</small>
+    </button>`).join("");
+
   const rows = [];
   for (const [id, byQ] of Object.entries(H.answers)) {
     if (!H.teams[id]) continue;
