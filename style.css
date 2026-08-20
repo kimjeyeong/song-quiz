@@ -18,37 +18,11 @@
 
 body {
   margin: 0;
-  background-color: var(--ink);
-  background-image:
-    linear-gradient(rgba(255,255,255,.10) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.10) 1px, transparent 1px);
-  background-size: 36px 36px;
+  background: var(--ink) url("assets/friday-recreation-bg.png") center / cover fixed no-repeat;
   color: var(--white);
   font-family: "Jua", "Malgun Gothic", "맑은 고딕", sans-serif;
   -webkit-text-size-adjust: 100%;
-  isolation: isolate;
 }
-
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  z-index: 0;
-  pointer-events: none;
-  background-color: #f5f2eb;
-  background-image: radial-gradient(rgba(15,18,24,.09) .7px, transparent .8px);
-  background-size: 4px 4px;
-}
-body::before {
-  left: 0; top: 0; width: min(30vw, 460px); height: min(25vh, 230px);
-  clip-path: polygon(0 0,100% 0,91% 22%,81% 27%,76% 43%,63% 45%,55% 59%,41% 65%,35% 78%,17% 87%,0 100%);
-}
-body::after {
-  right: 0; bottom: 0; width: min(34vw, 500px); height: min(27vh, 250px);
-  clip-path: polygon(100% 100%,0 100%,9% 83%,24% 78%,30% 64%,46% 61%,54% 45%,70% 39%,76% 23%,92% 15%,100% 0);
-}
-
-body > * { position: relative; z-index: 1; }
 
 .fatal { padding: 40px; text-align: center; }
 .fatal h1 { color: var(--amber); }
