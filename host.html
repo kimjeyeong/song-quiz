@@ -273,7 +273,7 @@ function saveLocalState() {
 
 /* ---------- 시작 ---------- */
 Promise.all([
-  fetch("songs.json?v=phrase5-20260821").then((r) => {
+  fetch("songs.json?v=phrase6-20260821").then((r) => {
     if (!r.ok) throw new Error("songs.json을 불러오지 못했습니다.");
     return r.json();
   }),
