@@ -103,6 +103,32 @@
   #view-result th { color:#315fb8; }
   #view-result tr.me td { background:#dceaff; }
   #view-result tr.top td.rank { color:#075cf5; }
+  .reveal-card {
+    margin-top:36px; padding:34px 20px; text-align:center;
+    background:var(--white); color:var(--black); border:3px solid var(--black);
+    border-radius:18px; box-shadow:6px 6px 0 var(--black); position:relative; overflow:hidden;
+  }
+  .reveal-card.ok { background:#f2ffe9; border-color:#14752a; }
+  .reveal-card.no { background:#fff0f2; border-color:#b8233b; }
+  .reveal-card .rq { color:#315fb8; font-size:16px; }
+  .reveal-card .rt { font-size:34px; margin:14px 0 8px; }
+  .reveal-card .rn { color:#476da9; font-size:14px; }
+  .reveal-mark { font-size:92px; font-weight:800; line-height:1; margin-top:18px; }
+  .reveal-mark.ok { color:#22a447; animation:result-pop .55s cubic-bezier(.2,1.6,.4,1) both; }
+  .reveal-mark.no { color:#e43f57; animation:result-shake .55s ease both; }
+  .reveal-points { font-size:44px; color:#075cf5; margin:4px 0 12px; animation:score-rise .8s .15s ease both; }
+  .reveal-card.ok::after {
+    content:"✦  ✦  ✦"; position:absolute; left:0; right:0; top:44%;
+    color:#86d52c; font-size:28px; letter-spacing:20px; animation:spark 1s ease both;
+  }
+  .reveal-mine { color:#53678e; font-size:14px; margin-bottom:7px; }
+  @keyframes result-pop { 0%{transform:scale(.15) rotate(-12deg);opacity:0} 70%{transform:scale(1.18) rotate(4deg)} 100%{transform:scale(1);opacity:1} }
+  @keyframes result-shake { 0%{transform:scale(.2);opacity:0} 45%{transform:scale(1.1)} 60%{transform:translateX(-9px)} 75%{transform:translateX(9px)} 100%{transform:translateX(0);opacity:1} }
+  @keyframes score-rise { 0%{transform:translateY(28px);opacity:0} 100%{transform:translateY(0);opacity:1} }
+  @keyframes spark { 0%{transform:scale(.4);opacity:0} 45%{opacity:1} 100%{transform:scale(1.45);opacity:0} }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-mark, .reveal-points, .reveal-card.ok::after { animation:none !important; }
+  }
 </style>
 </head>
 <body>
@@ -172,6 +198,22 @@
   </div>
 </section>
 
+<!-- 문제별 정답 공개 -->
+<section id="view-reveal" class="hidden">
+  <div class="topbar">
+    <span class="team" id="reveal-team"></span>
+    <span class="score" id="reveal-progress"></span>
+  </div>
+  <div class="reveal-card" id="reveal-card">
+    <div class="rq" id="reveal-q"></div>
+    <div class="rt" id="reveal-title"></div>
+    <div class="reveal-mark" id="reveal-mark"></div>
+    <div class="reveal-points" id="reveal-points"></div>
+    <div class="reveal-mine" id="reveal-mine"></div>
+    <div class="rn">후렴을 듣고 다음 문제를 기다려주세요</div>
+  </div>
+</section>
+
 <!-- 결과 -->
 <section id="view-result" class="hidden">
   <div class="logo" style="margin:10px 0 20px;">
@@ -196,10 +238,10 @@ let SONGS = [];
 let room = null, teamId = null, teamName = null;
 let state = null, myAnswers = {}, stateRef = null, ansRef = null, roomRef = null;
 
-fetch("songs.json").then(r => r.json()).then(j => { SONGS = j; });
+fetch("songs.json").then(r => r.json()).then(j => { SONGS = j; render(); });
 
 const $ = (id) => document.getElementById(id);
-const views = ["join", "wait", "play", "result"];
+const views = ["join", "wait", "play", "reveal", "result"];
 function show(v) {
   views.forEach(n => $("view-" + n).classList.toggle("hidden", n !== v));
 }
@@ -244,6 +286,7 @@ function rejoin(info) {
   room = info.room; teamId = info.teamId; teamName = info.teamName;
   $("wait-team").textContent = teamName;
   $("play-team").textContent = teamName;
+  $("reveal-team").textContent = teamName;
   $("wait-room").textContent = `방 ${room}`;
 
   roomRef = db.ref(`rooms/${room}`);
@@ -308,6 +351,30 @@ function render() {
   if (state.phase === "grading") {
     $("wait-msg").textContent = "채점 중입니다. 잠시만 기다려주세요";
     return show("wait");
+  }
+
+  if (state.phase === "reveal") {
+    const song = SONGS.find((s) => String(s.q) === String(state.q));
+    const mine = myAnswers[state.q];
+    const ok = !!(song && mine && autoGrade(mine.text, song));
+    const points = ok ? STAGES[mine.stage].points : 0;
+    const card = $("reveal-card");
+    const mark = $("reveal-mark");
+    const pointText = $("reveal-points");
+    card.className = "reveal-card";
+    mark.className = "reveal-mark";
+    pointText.className = "";
+    void card.offsetWidth;
+    $("reveal-progress").textContent = `${state.q} / ${state.total || 15}`;
+    $("reveal-q").textContent = `문제 ${state.q} 정답`;
+    $("reveal-title").textContent = song ? song.title : "정답 공개 중";
+    mark.textContent = ok ? "O" : "X";
+    mark.className = `reveal-mark ${ok ? "ok" : "no"}`;
+    pointText.textContent = `+${points}점`;
+    pointText.className = "reveal-points";
+    $("reveal-mine").textContent = mine ? `제출한 답: ${mine.text}` : "미제출";
+    card.classList.add(ok ? "ok" : "no");
+    return show("reveal");
   }
 
   if (state.phase === "results") {
