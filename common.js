@@ -31,43 +31,12 @@ function normalize(s) {
     .trim();
 }
 
-function levenshtein(a, b) {
-  if (a === b) return 0;
-  if (!a.length) return b.length;
-  if (!b.length) return a.length;
-  let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
-  for (let i = 1; i <= a.length; i++) {
-    const cur = [i];
-    for (let j = 1; j <= b.length; j++) {
-      cur[j] = Math.min(
-        prev[j] + 1,
-        cur[j - 1] + 1,
-        prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
-      );
-    }
-    prev = cur;
-  }
-  return prev[b.length];
-}
-
-/* 오타·띄어쓰기 차이를 허용해서 정답 여부를 자동 판정 */
+/* 정규화한 제목 또는 등록된 별칭과 정확히 일치할 때만 정답 처리 */
 function autoGrade(answer, song) {
   const given = normalize(answer);
   if (!given) return false;
   const targets = [song.title, ...(song.aliases || [])].map(normalize);
-  for (const t of targets) {
-    if (!t) continue;
-    if (given === t) return true;
-    const dist = levenshtein(given, t);
-    const ratio = 1 - dist / Math.max(given.length, t.length);
-    if (ratio >= 0.75) return true;
-    // 제목이 길 때 앞부분만 정확히 적어도 인정
-    if (t.length >= 6 && given.length >= 4 && t.startsWith(given) &&
-        given.length / t.length >= 0.6) {
-      return true;
-    }
-  }
-  return false;
+  return targets.includes(given);
 }
 
 function escapeHtml(s) {
