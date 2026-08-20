@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>진행자 화면 · 0.5초 노래 맞히기</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+  main { flex: 1; overflow: auto; padding: 26px 34px; }
+
+  .statusdot {
+    position: fixed; top: 12px; right: 16px; z-index: 50;
+    font-size: 12px; color: var(--muted); display: flex; align-items: center; gap: 7px;
+  }
+  .statusdot i { width: 9px; height: 9px; border-radius: 50%; background: var(--no); display: block; }
+  .statusdot.online i { background: var(--ok); }
+  .statusdot.connecting i { background: var(--amber); }
+
+  /* 대기실 */
+  .lobby { display: grid; grid-template-columns: 1fr 1fr; gap: 34px; height: 100%; align-items: center; }
+  .joinbox { text-align: center; }
+  .roomcode {
+    font-size: 88px; font-weight: 800; letter-spacing: 8px;
+    color: var(--amber); line-height: 1; margin: 6px 0 10px;
+  }
+  .joinurl {
+    font-size: 20px; font-weight: 700; word-break: break-all;
+    background: var(--panel); border-radius: 12px; padding: 14px 16px; margin-top: 14px;
+  }
+  #qr { background: #fff; padding: 12px; border-radius: 14px; display: inline-block; }
+  #qr canvas { display: block; }
+
+  .teamgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .teamchip {
+    background: var(--panel); border: 2px solid var(--panel-2);
+    border-radius: 12px; padding: 13px 15px; font-weight: 700; font-size: 18px;
+  }
+  .teamchip.answered { border-color: var(--ok); }
+  .teamchip small { display: block; font-weight: 600; font-size: 12px; color: var(--muted); margin-top: 3px; }
+  .teamchip.answered small { color: var(--ok); }
+
+  h2.sec { font-size: 15px; color: var(--muted); margin: 0 0 12px; font-weight: 700; }
+
+  /* 문제 진행 */
+  .playhead { display: flex; align-items: baseline; gap: 18px; margin-bottom: 4px; }
+  .playhead .qn { font-size: 62px; font-weight: 800; color: var(--amber); line-height: 1; }
+  .playhead .of { font-size: 19px; color: var(--muted); font-weight: 700; }
+  .secret {
+    margin-left: auto; font-size: 14px; color: var(--muted);
+    background: var(--panel); padding: 9px 15px; border-radius: 10px;
+  }
+  .secret b { color: var(--glow); font-size: 17px; }
+
+  .playbtns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 22px 0 26px; }
+  .playbtns button {
+    padding: 26px 10px; background: var(--panel); color: var(--white);
+    border: 2px solid var(--panel-2); font-size: 15px;
+  }
+  .playbtns button .d { display: block; font-size: 40px; font-weight: 800; margin-bottom: 4px; }
+  .playbtns button .p { color: var(--muted); font-size: 13px; }
+  .playbtns button.on { border-color: var(--amber); background: var(--panel-2); }
+  .playbtns button.on .d { color: var(--amber); }
+  .playbtns button:hover:not(:disabled) { border-color: var(--glow); }
+
+  footer {
+    border-top: 1px solid var(--panel-2); padding: 14px 34px;
+    display: flex; gap: 12px; align-items: center; background: var(--ink);
+  }
+  footer .spacer { flex: 1; }
+  footer .count { font-size: 16px; font-weight: 700; }
+  footer .count b { color: var(--amber); font-size: 22px; }
+  .btn-main { padding: 14px 32px; font-size: 17px; background: var(--amber); color: var(--ink); }
+  .btn-sub  { padding: 14px 22px; font-size: 15px; background: var(--panel); color: var(--white); border: 2px solid var(--panel-2); }
+  .btn-danger { padding: 12px 18px; font-size: 14px; background: transparent; color: var(--muted); border: 2px solid var(--panel-2); }
+
+  /* 채점 */
+  table.grade { width: 100%; border-collapse: collapse; }
+  table.grade th, table.grade td { padding: 9px 10px; border-bottom: 1px solid var(--panel-2); font-size: 15px; text-align: left; }
+  table.grade th { color: var(--muted); font-size: 12px; position: sticky; top: 0; background: var(--ink); }
+  table.grade td.q { color: var(--glow); font-weight: 800; width: 44px; }
+  table.grade td.correct { color: var(--muted); font-size: 13px; }
+  .mark {
+    border: none; border-radius: 8px; padding: 7px 13px; font-size: 13px; font-weight: 800; cursor: pointer;
+  }
+  .mark.ok { background: var(--ok); color: #05291d; }
+  .mark.no { background: var(--panel-2); color: var(--no); }
+
+  /* 결과 */
+  .podium { display: grid; gap: 11px; max-width: 780px; margin: 0 auto; }
+  .prow {
+    display: flex; align-items: center; gap: 18px;
+    background: var(--panel); border: 2px solid var(--panel-2);
+    border-radius: 14px; padding: 15px 22px;
+  }
+  .prow .r { font-size: 28px; font-weight: 800; color: var(--glow); width: 58px; }
+  .prow .n { font-size: 24px; font-weight: 800; flex: 1; }
+  .prow .p { font-size: 28px; font-weight: 800; color: var(--amber); }
+  .prow .p small { font-size: 14px; color: var(--muted); font-weight: 600; }
+  .prow.first { border-color: var(--amber); background: var(--panel-2); }
+  .prow.first .r { color: var(--amber); }
+  .prow.first .n { font-size: 30px; }
+</style>
+</head>
+<body>
+
+<div class="statusdot" id="status"><i></i><span>연결 중</span></div>
+
+<main>
+  <!-- 대기실 -->
+  <section id="view-lobby">
+    <div class="lobby">
+      <div class="joinbox">
+        <div class="muted" style="font-size:15px;font-weight:700;">휴대폰으로 접속하세요</div>
+        <div class="roomcode" id="lb-code">----</div>
+        <div id="qr"></div>
+        <div class="joinurl" id="lb-url"></div>
+      </div>
+      <div>
+        <h2 class="sec">참가한 팀 <span id="lb-count" class="amber"></span></h2>
+        <div class="teamgrid" id="lb-teams"></div>
+        <p class="muted" id="lb-empty" style="font-size:15px;">아직 참가한 팀이 없습니다.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 문제 -->
+  <section id="view-play" class="hidden">
+    <div class="playhead">
+      <span class="qn" id="pl-q">1</span>
+      <span class="of" id="pl-of">/ 15</span>
+      <span class="secret">정답 <b id="pl-answer"></b></span>
+    </div>
+
+    <div class="playbtns">
+      <button data-stage="0"><span class="d">0.5초</span><span class="p">3점</span></button>
+      <button data-stage="1"><span class="d">1초</span><span class="p">2점</span></button>
+      <button data-stage="2"><span class="d">1.5초</span><span class="p">1점</span></button>
+    </div>
+
+    <h2 class="sec">제출 현황</h2>
+    <div class="teamgrid" id="pl-teams"></div>
+  </section>
+
+  <!-- 채점 -->
+  <section id="view-grade" class="hidden">
+    <h2 class="sec" style="font-size:19px;color:var(--white);">채점 확인 — 잘못 판정된 답을 눌러서 바꿔주세요</h2>
+    <table class="grade">
+      <thead><tr><th></th><th>팀</th><th>제출한 답</th><th>정답</th><th>단계</th><th>판정</th></tr></thead>
+      <tbody id="gr-body"></tbody>
+    </table>
+  </section>
+
+  <!-- 결과 -->
+  <section id="view-result" class="hidden">
+    <h2 class="sec" style="text-align:center;font-size:17px;">최종 순위</h2>
+    <div class="podium" id="rs-body"></div>
+  </section>
+</main>
+
+<footer>
+  <span class="count" id="ft-info"></span>
+  <span class="spacer"></span>
+  <button class="btn-danger" id="btn-reset">전체 초기화</button>
+  <button class="btn-sub" id="btn-prev">◀ 이전</button>
+  <button class="btn-main" id="btn-next">시작하기 ▶</button>
+</footer>
+
+<audio id="player"></audio>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="firebase-config.js"></script>
+<script src="common.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const LS = "songquiz_host_v1";
+const ROOM = "0691";
+const db = initFirebase();
+const roomRef = db.ref(`rooms/${ROOM}`);
+
+let SONGS = [];
+let H = {
+  room: ROOM, phase: "lobby", q: 1, stage: 0, total: 15,
+  teams: {}, answers: {}, overrides: {},
+};
+
+function loadLocalState() {
+  try {
+    const v = JSON.parse(localStorage.getItem(LS));
+    if (v && v.room === ROOM) return v;
+  } catch (e) {}
+  return null;
+}
+function saveLocalState() {
+  localStorage.setItem(LS, JSON.stringify({
+    room: ROOM, phase: H.phase, q: H.q, stage: H.stage, total: H.total,
+  }));
+}
+
+/* ---------- 시작 ---------- */
+Promise.all([
+  fetch("songs.json").then((r) => {
+    if (!r.ok) throw new Error("songs.json을 불러오지 못했습니다.");
+    return r.json();
+  }),
+  roomRef.get(),
+]).then(async ([songs, snap]) => {
+  SONGS = songs;
+  const remote = snap.val();
+  if (!remote || !remote.state) {
+    const local = loadLocalState();
+    const state = local
+      ? { phase: local.phase, q: local.q, stage: local.stage, total: songs.length }
+      : { phase: "lobby", q: 1, stage: 0, total: songs.length };
+    await roomRef.child("state").set(state);
+  }
+  start();
+}).catch((error) => {
+  document.body.innerHTML = `<div class="fatal"><h1>시작할 수 없습니다</h1><p>${escapeHtml(error.message)}</p></div>`;
+});
+
+function start() {
+  $("lb-code").textContent = ROOM;
+  const url = location.origin + location.pathname.replace(/host\.html$/, "") + "?room=" + ROOM;
+  $("lb-url").textContent = url.replace(/^https?:\/\//, "");
+
+  if (window.QRCode) {
+    QRCode.toCanvas(url, { width: 226, margin: 1 }, (err, canvas) => {
+      if (!err && canvas) $("qr").appendChild(canvas);
+    });
+  }
+
+  db.ref(".info/connected").on("value", (snap) => {
+    const st = snap.val() ? "online" : "offline";
+    const el = $("status");
+    el.className = "statusdot " + st;
+    el.querySelector("span").textContent =
+      st === "online" ? "연결됨" : "끊김 — 재연결 중";
+  });
+
+  roomRef.on("value", (snap) => {
+    const data = snap.val() || {};
+    H = {
+      room: ROOM,
+      phase: (data.state || {}).phase || "lobby",
+      q: (data.state || {}).q || 1,
+      stage: (data.state || {}).stage || 0,
+      total: (data.state || {}).total || SONGS.length,
+      teams: data.teams || {},
+      answers: data.answers || {},
+      overrides: data.overrides || {},
+    };
+    saveLocalState();
+    render();
+  });
+}
+
+function writeState() {
+  saveLocalState();
+  return roomRef.child("state").set({
+    phase: H.phase, q: H.q, stage: H.stage, total: SONGS.length,
+  });
+}
+
+/* ---------- 재생 ---------- */
+document.querySelectorAll(".playbtns button").forEach((b) => {
+  b.onclick = () => playStage(+b.dataset.stage);
+});
+
+function playStage(s) {
+  H.stage = s;
+  writeState();
+  const song = SONGS[H.q - 1];
+  if (!song) return;
+  const p = $("player");
+  p.src = song.clips["s" + s];
+  p.currentTime = 0;
+  p.play().catch(() => {});
+}
+
+function playReveal() {
+  const song = SONGS[H.q - 1];
+  if (!song) return;
+  const p = $("player");
+  p.src = song.clips.reveal;
+  p.play().catch(() => {});
+}
+
+/* ---------- 진행 ---------- */
+$("btn-next").onclick = next;
+$("btn-prev").onclick = prev;
+$("btn-reset").onclick = () => {
+  if (!confirm("모든 팀과 답안을 지우고 처음부터 시작합니다. 계속할까요?")) return;
+  localStorage.removeItem(LS);
+  roomRef.set({ state: { phase: "lobby", q: 1, stage: 0, total: SONGS.length } });
+};
+
+function next() {
+  if (H.phase === "lobby") {
+    if (!Object.keys(H.teams).length && !confirm("참가한 팀이 없습니다. 그래도 시작할까요?")) return;
+    H.phase = "playing"; H.q = 1; H.stage = 0;
+  } else if (H.phase === "playing") {
+    if (H.q < SONGS.length) { H.q++; H.stage = 0; }
+    else { H.phase = "grading"; }
+  } else if (H.phase === "grading") {
+    H.phase = "results";
+  }
+  writeState();
+}
+
+function prev() {
+  if (H.phase === "playing") {
+    if (H.q > 1) { H.q--; H.stage = 0; }
+    else { H.phase = "lobby"; }
+  } else if (H.phase === "grading") {
+    H.phase = "playing"; H.q = SONGS.length; H.stage = 0;
+  } else if (H.phase === "results") {
+    H.phase = "grading";
+  }
+  writeState();
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.tagName === "INPUT") return;
+  if (H.phase === "playing" && ["1", "2", "3"].includes(e.key)) { playStage(+e.key - 1); e.preventDefault(); }
+  else if (e.key === "0" && H.phase === "playing") { playReveal(); e.preventDefault(); }
+  else if (e.key === "ArrowRight") { next(); e.preventDefault(); }
+  else if (e.key === "ArrowLeft") { prev(); e.preventDefault(); }
+});
+
+/* ---------- 화면 ---------- */
+function render() {
+  ["lobby", "play", "grade", "result"].forEach((v) => {
+    const on = { lobby: "lobby", playing: "play", grading: "grade", results: "result" }[H.phase] === v;
+    $("view-" + v).classList.toggle("hidden", !on);
+  });
+
+  const teamIds = Object.keys(H.teams);
+
+  if (H.phase === "lobby") {
+    $("lb-count").textContent = teamIds.length ? `${teamIds.length}팀` : "";
+    $("lb-empty").classList.toggle("hidden", teamIds.length > 0);
+    $("lb-teams").innerHTML = teamIds
+      .map((id) => `<div class="teamchip">${escapeHtml(H.teams[id].name)}</div>`).join("");
+    $("ft-info").innerHTML = `방 번호 <b>${ROOM}</b>`;
+    $("btn-next").textContent = "시작하기 ▶";
+    $("btn-prev").disabled = true;
+  }
+
+  if (H.phase === "playing") {
+    const song = SONGS[H.q - 1] || {};
+    $("pl-q").textContent = H.q;
+    $("pl-of").textContent = `/ ${SONGS.length}`;
+    $("pl-answer").textContent = song.title || "";
+    document.querySelectorAll(".playbtns button").forEach((b) => {
+      b.classList.toggle("on", +b.dataset.stage === H.stage);
+    });
+
+    let done = 0;
+    $("pl-teams").innerHTML = teamIds.map((id) => {
+      const a = (H.answers[id] || {})[H.q];
+      if (a) done++;
+      return `<div class="teamchip ${a ? "answered" : ""}">
+          ${escapeHtml(H.teams[id].name)}
+          <small>${a ? `제출 완료 · ${STAGES[a.stage].label}` : "대기 중"}</small>
+        </div>`;
+    }).join("") || '<p class="muted">참가한 팀이 없습니다.</p>';
+
+    $("ft-info").innerHTML = `제출 <b>${done}</b> / ${teamIds.length}팀`;
+    $("btn-next").textContent = H.q < SONGS.length ? "다음 문제 ▶" : "채점하기 ▶";
+    $("btn-prev").disabled = false;
+  }
+
+  if (H.phase === "grading") renderGrade();
+
+  if (H.phase === "results") {
+    const rows = computeRanking(H.teams, H.answers, H.overrides, SONGS);
+    $("rs-body").innerHTML = rows.map((r) => `
+      <div class="prow ${r.rank === 1 ? "first" : ""}">
+        <span class="r">${r.rank}등</span>
+        <span class="n">${escapeHtml(r.name)}</span>
+        <span class="p">${r.pts}<small> 점</small></span>
+      </div>`).join("") || '<p class="muted">기록이 없습니다.</p>';
+    $("ft-info").textContent = "게임 종료";
+    $("btn-next").textContent = "끝";
+    $("btn-next").disabled = true;
+    $("btn-prev").disabled = false;
+  } else {
+    $("btn-next").disabled = false;
+  }
+}
+
+function renderGrade() {
+  const rows = [];
+  for (const [id, byQ] of Object.entries(H.answers)) {
+    if (!H.teams[id]) continue;
+    for (const [q, a] of Object.entries(byQ)) {
+      const song = SONGS.find((s) => String(s.q) === String(q));
+      const ov = H.overrides[q] && H.overrides[q][id];
+      const ok = ov === undefined || ov === null ? (song ? autoGrade(a.text, song) : false) : !!ov;
+      rows.push({ id, q: +q, a, song, ok });
+    }
+  }
+  rows.sort((x, y) => x.q - y.q || H.teams[x.id].name.localeCompare(H.teams[y.id].name));
+
+  $("gr-body").innerHTML = rows.map((r) => `
+    <tr>
+      <td class="q">${r.q}</td>
+      <td>${escapeHtml(H.teams[r.id].name)}</td>
+      <td><b>${escapeHtml(r.a.text)}</b></td>
+      <td class="correct">${escapeHtml(r.song ? r.song.title : "")}</td>
+      <td class="correct">${STAGES[r.a.stage].label} · ${STAGES[r.a.stage].points}점</td>
+      <td><button class="mark ${r.ok ? "ok" : "no"}"
+            onclick="toggleGrade('${r.id}',${r.q})">${r.ok ? "정답 " + STAGES[r.a.stage].points + "점" : "오답"}</button></td>
+    </tr>`).join("") || '<tr><td colspan="6" class="muted">제출된 답이 없습니다.</td></tr>';
+
+  $("ft-info").innerHTML = `채점 대상 <b>${rows.length}</b>건`;
+  $("btn-next").textContent = "결과 발표 ▶";
+  $("btn-prev").disabled = false;
+}
+
+function toggleGrade(id, q) {
+  const song = SONGS.find((s) => String(s.q) === String(q));
+  const a = H.answers[id][q];
+  const ov = H.overrides[q] && H.overrides[q][id];
+  const cur = ov === undefined || ov === null ? (song ? autoGrade(a.text, song) : false) : !!ov;
+  roomRef.child(`overrides/${q}/${id}`).set(!cur);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>0.5초 노래 맞히기</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { padding: 20px 18px 40px; max-width: 520px; margin: 0 auto; }
+
+  .logo { text-align:center; margin: 18px 0 26px; }
+  .logo .big { font-size: 46px; font-weight: 800; letter-spacing:-1px; }
+  .logo .sub { font-size: 19px; font-weight: 700; color: var(--glow); margin-top: 2px; }
+
+  .field { margin-bottom: 14px; }
+  .field label { display:block; font-size:13px; color:var(--muted); margin-bottom:7px; font-weight:700; }
+
+  .primary {
+    width:100%; padding:17px; font-size:18px;
+    background: var(--amber); color: var(--ink);
+  }
+  .ghost {
+    width:100%; padding:14px; font-size:15px;
+    background: transparent; color: var(--muted);
+    border: 2px solid var(--panel-2);
+  }
+
+  .topbar {
+    display:flex; justify-content:space-between; align-items:center;
+    padding-bottom:14px; border-bottom:1px solid var(--panel-2); margin-bottom:22px;
+  }
+  .topbar .team { font-weight:800; font-size:17px; }
+  .topbar .score { font-size:13px; color:var(--muted); }
+
+  .qnum { text-align:center; font-size:15px; color:var(--muted); font-weight:700; }
+  .qbig { text-align:center; font-size:64px; font-weight:800; line-height:1.05; margin:4px 0 6px; }
+
+  .stagebar { display:flex; gap:8px; margin:20px 0 8px; }
+  .stagebar div {
+    flex:1; text-align:center; padding:11px 4px; border-radius:11px;
+    background:var(--panel); border:2px solid transparent;
+    font-size:13px; font-weight:700; color:var(--muted);
+  }
+  .stagebar div.on {
+    border-color:var(--amber); color:var(--amber); background:var(--panel-2);
+  }
+  .stagebar div .pt { display:block; font-size:11px; font-weight:600; opacity:.8; margin-top:2px; }
+
+  .nowpts {
+    text-align:center; margin:16px 0 18px; font-size:15px; color:var(--muted);
+  }
+  .nowpts b { color:var(--amber); font-size:20px; }
+
+  .done {
+    background:var(--panel); border:2px solid var(--ok);
+    border-radius:16px; padding:26px 20px; text-align:center;
+  }
+  .done .mark { font-size:38px; }
+  .done .ans { font-size:23px; font-weight:800; margin:10px 0 6px; word-break:break-all; }
+  .done .got { font-size:14px; color:var(--ok); font-weight:700; }
+
+  .wait { text-align:center; padding:60px 20px; }
+  .wait .dots { font-size:40px; letter-spacing:6px; color:var(--glow); }
+  .wait p { color:var(--muted); font-size:15px; margin-top:14px; }
+
+  table { width:100%; border-collapse:collapse; margin-top:10px; }
+  th, td { padding:11px 8px; text-align:left; border-bottom:1px solid var(--panel-2); font-size:15px; }
+  th { color:var(--muted); font-size:12px; font-weight:700; }
+  td.rank { width:44px; font-weight:800; color:var(--glow); }
+  td.pts  { text-align:right; font-weight:800; }
+  tr.me td { background:var(--panel-2); }
+  tr.top td.rank { color:var(--amber); }
+</style>
+</head>
+<body>
+
+<!-- 참가 -->
+<section id="view-join">
+  <div class="logo">
+    <div class="big">0.5초</div>
+    <div class="sub">노래 맞히기</div>
+  </div>
+  <div class="field">
+    <label>방 번호</label>
+    <input id="in-room" inputmode="numeric" maxlength="4" value="0691" readonly>
+  </div>
+  <div class="field">
+    <label>우리 팀 이름</label>
+    <input id="in-team" maxlength="12" placeholder="예: 1조">
+  </div>
+  <p id="join-err" class="hidden" style="color:var(--no);font-size:14px;margin:6px 0 14px;"></p>
+  <button class="primary" id="btn-join">참가하기</button>
+</section>
+
+<!-- 대기 -->
+<section id="view-wait" class="hidden">
+  <div class="topbar">
+    <span class="team" id="wait-team"></span>
+    <span class="score" id="wait-room"></span>
+  </div>
+  <div class="wait">
+    <div class="dots">● ● ●</div>
+    <p id="wait-msg">진행자가 시작하기를 기다리는 중입니다</p>
+    <button class="ghost" id="btn-leave" style="margin-top:30px;">나가기</button>
+  </div>
+</section>
+
+<!-- 문제 -->
+<section id="view-play" class="hidden">
+  <div class="topbar">
+    <span class="team" id="play-team"></span>
+    <span class="score" id="play-progress"></span>
+  </div>
+
+  <div class="qnum">문제</div>
+  <div class="qbig" id="play-q">1</div>
+
+  <div class="stagebar">
+    <div id="st0">0.5초<span class="pt">3점</span></div>
+    <div id="st1">1초<span class="pt">2점</span></div>
+    <div id="st2">1.5초<span class="pt">1점</span></div>
+  </div>
+
+  <div id="answer-box">
+    <div class="nowpts">지금 제출하면 <b id="cur-pts">3점</b></div>
+    <div class="field">
+      <input id="in-answer" placeholder="노래 제목을 입력하세요" autocomplete="off">
+    </div>
+    <button class="primary" id="btn-submit">제출하기</button>
+    <p class="muted" style="font-size:12.5px;text-align:center;margin-top:12px;">
+      한 문제에 한 번만 제출할 수 있습니다
+    </p>
+  </div>
+
+  <div id="submitted-box" class="done hidden">
+    <div class="mark">✓</div>
+    <div class="ans" id="my-answer"></div>
+    <div class="got" id="my-stage"></div>
+  </div>
+</section>
+
+<!-- 결과 -->
+<section id="view-result" class="hidden">
+  <div class="logo" style="margin:10px 0 20px;">
+    <div class="big" style="font-size:34px;">최종 순위</div>
+  </div>
+  <div id="my-result" style="text-align:center;margin-bottom:24px;"></div>
+  <table>
+    <thead><tr><th></th><th>팀</th><th style="text-align:right;">점수</th></tr></thead>
+    <tbody id="rank-body"></tbody>
+  </table>
+</section>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="common.js"></script>
+<script>
+const db = initFirebase();
+const FIXED_ROOM = "0691";
+
+let SONGS = [];
+let room = null, teamId = null, teamName = null;
+let state = null, myAnswers = {}, stateRef = null, ansRef = null, roomRef = null;
+
+fetch("songs.json").then(r => r.json()).then(j => { SONGS = j; });
+
+const $ = (id) => document.getElementById(id);
+const views = ["join", "wait", "play", "result"];
+function show(v) {
+  views.forEach(n => $("view-" + n).classList.toggle("hidden", n !== v));
+}
+
+/* ---------- 참가 ---------- */
+const saved = JSON.parse(localStorage.getItem("songquiz") || "null");
+$("in-room").value = FIXED_ROOM;
+if (saved && saved.room === FIXED_ROOM && saved.teamId) {
+  $("in-room").value = saved.room;
+  $("in-team").value = saved.teamName || "";
+  rejoin(saved);
+}
+
+$("btn-join").onclick = async () => {
+  const r = FIXED_ROOM;
+  const n = $("in-team").value.trim();
+  const err = $("join-err");
+  err.classList.add("hidden");
+
+  if (r.length !== 4) return fail("방 번호 4자리를 입력해주세요.");
+  if (!n) return fail("팀 이름을 입력해주세요.");
+
+  const snap = await db.ref(`rooms/${r}/state`).get();
+  if (!snap.exists()) return fail("그런 방이 없습니다. 번호를 다시 확인해주세요.");
+
+  const ref = db.ref(`rooms/${r}/teams`).push();
+  await ref.set({ name: n, joinedAt: Date.now() });
+  const info = { room: r, teamId: ref.key, teamName: n };
+  localStorage.setItem("songquiz", JSON.stringify(info));
+  rejoin(info);
+
+  function fail(m) { err.textContent = m; err.classList.remove("hidden"); }
+};
+
+$("btn-leave").onclick = () => {
+  if (!confirm("정말 나가시겠습니까? 지금까지 제출한 답은 남아있습니다.")) return;
+  localStorage.removeItem("songquiz");
+  location.reload();
+};
+
+function rejoin(info) {
+  room = info.room; teamId = info.teamId; teamName = info.teamName;
+  $("wait-team").textContent = teamName;
+  $("play-team").textContent = teamName;
+  $("wait-room").textContent = `방 ${room}`;
+
+  roomRef = db.ref(`rooms/${room}`);
+  stateRef = db.ref(`rooms/${room}/state`);
+  ansRef = db.ref(`rooms/${room}/answers/${teamId}`);
+
+  ansRef.on("value", s => { myAnswers = s.val() || {}; render(); });
+  stateRef.on("value", s => { state = s.val(); render(); });
+}
+
+/* ---------- 제출 ---------- */
+$("btn-submit").onclick = submit;
+$("in-answer").addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+
+async function submit() {
+  if (!state || state.phase !== "playing") return;
+  const text = $("in-answer").value.trim();
+  if (!text) return;
+  const q = state.q;
+  if (myAnswers[q]) return;
+
+  $("btn-submit").disabled = true;
+  await ansRef.child(String(q)).transaction((current) => current || ({
+    text, stage: state.stage, at: Date.now(),
+  }));
+  $("in-answer").value = "";
+  $("btn-submit").disabled = false;
+}
+
+/* ---------- 화면 ---------- */
+function render() {
+  if (!state) return;
+
+  if (state.phase === "lobby") {
+    $("wait-msg").textContent = "진행자가 시작하기를 기다리는 중입니다";
+    return show("wait");
+  }
+
+  if (state.phase === "playing") {
+    const q = state.q;
+    $("play-q").textContent = q;
+    $("play-progress").textContent = `${q} / ${state.total || 15}`;
+
+    for (let i = 0; i < 3; i++) {
+      $("st" + i).classList.toggle("on", i === state.stage);
+    }
+
+    const mine = myAnswers[q];
+    $("answer-box").classList.toggle("hidden", !!mine);
+    $("submitted-box").classList.toggle("hidden", !mine);
+
+    if (mine) {
+      $("my-answer").textContent = mine.text;
+      $("my-stage").textContent =
+        `${STAGES[mine.stage].label}에 제출 · 맞히면 ${STAGES[mine.stage].points}점`;
+    } else {
+      $("cur-pts").textContent = STAGES[state.stage].points + "점";
+    }
+    return show("play");
+  }
+
+  if (state.phase === "grading") {
+    $("wait-msg").textContent = "채점 중입니다. 잠시만 기다려주세요";
+    return show("wait");
+  }
+
+  if (state.phase === "results") {
+    renderResults();
+    return show("result");
+  }
+}
+
+async function renderResults() {
+  const snap = await roomRef.get();
+  const data = snap.val() || {};
+  const teams = data.teams || {};
+  const answers = data.answers || {};
+  const overrides = data.overrides || {};
+
+  const rows = computeRanking(teams, answers, overrides, SONGS);
+
+  const me = rows.find(r => r.id === teamId);
+  $("my-result").innerHTML = me
+    ? `<div class="badge">${escapeHtml(me.name)}</div>
+       <div style="font-size:52px;font-weight:800;margin-top:12px;">${me.pts}<span style="font-size:22px;color:var(--muted);">점</span></div>
+       <div style="color:var(--glow);font-weight:700;margin-top:2px;">${me.rank}등</div>`
+    : "";
+
+  $("rank-body").innerHTML = rows.map(r => `
+    <tr class="${r.id === teamId ? "me" : ""} ${r.rank === 1 ? "top" : ""}">
+      <td class="rank">${r.rank}</td>
+      <td>${escapeHtml(r.name)}</td>
+      <td class="pts">${r.pts}</td>
+    </tr>`).join("");
+}
+</script>
+</body>
+</html>

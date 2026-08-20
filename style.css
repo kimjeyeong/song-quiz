@@ -1,0 +1,63 @@
+:root {
+  --ink: #12102b;
+  --panel: #1e1a45;
+  --panel-2: #262159;
+  --violet: #7c3aed;
+  --glow: #a78bfa;
+  --amber: #fbbf24;
+  --white: #ffffff;
+  --muted: #9c96c4;
+  --ok: #34d399;
+  --no: #f87171;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--white);
+  font-family: "Malgun Gothic", "맑은 고딕", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+.fatal { padding: 40px; text-align: center; }
+.fatal h1 { color: var(--amber); }
+code { background: var(--panel); padding: 2px 6px; border-radius: 4px; }
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+}
+button:disabled { cursor: not-allowed; opacity: .45; }
+
+input {
+  font-family: inherit;
+  border-radius: 12px;
+  border: 2px solid var(--panel-2);
+  background: var(--panel);
+  color: var(--white);
+  padding: 14px 16px;
+  font-size: 17px;
+  width: 100%;
+}
+input:focus { outline: none; border-color: var(--glow); }
+input::placeholder { color: #6f689b; }
+
+.muted { color: var(--muted); }
+.amber { color: var(--amber); }
+.hidden { display: none !important; }
+
+.badge {
+  display: inline-block;
+  background: var(--amber);
+  color: var(--ink);
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 5px 14px;
+  font-size: 14px;
+}

@@ -1,0 +1,193 @@
+[
+  {
+    "q": 1,
+    "number": "01",
+    "title": "행복",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/01_05.mp3",
+      "s1": "clips/01_10.mp3",
+      "s2": "clips/01_15.mp3",
+      "reveal": "clips/01_reveal.mp3"
+    }
+  },
+  {
+    "q": 2,
+    "number": "02",
+    "title": "어둔 날 다 지나고",
+    "aliases": [
+      "어둔 날 다 지나고"
+    ],
+    "clips": {
+      "s0": "clips/02_05.mp3",
+      "s1": "clips/02_10.mp3",
+      "s2": "clips/02_15.mp3",
+      "reveal": "clips/02_reveal.mp3"
+    }
+  },
+  {
+    "q": 3,
+    "number": "03",
+    "title": "하나님의 세계",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/03_05.mp3",
+      "s1": "clips/03_10.mp3",
+      "s2": "clips/03_15.mp3",
+      "reveal": "clips/03_reveal.mp3"
+    }
+  },
+  {
+    "q": 4,
+    "number": "04",
+    "title": "은혜",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/04_05.mp3",
+      "s1": "clips/04_10.mp3",
+      "s2": "clips/04_15.mp3",
+      "reveal": "clips/04_reveal.mp3"
+    }
+  },
+  {
+    "q": 5,
+    "number": "05",
+    "title": "광야를 지나며",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/05_05.mp3",
+      "s1": "clips/05_10.mp3",
+      "s2": "clips/05_15.mp3",
+      "reveal": "clips/05_reveal.mp3"
+    }
+  },
+  {
+    "q": 6,
+    "number": "06",
+    "title": "성령이 오셨네",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/06_05.mp3",
+      "s1": "clips/06_10.mp3",
+      "s2": "clips/06_15.mp3",
+      "reveal": "clips/06_reveal.mp3"
+    }
+  },
+  {
+    "q": 7,
+    "number": "07",
+    "title": "꽃들도",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/07_05.mp3",
+      "s1": "clips/07_10.mp3",
+      "s2": "clips/07_15.mp3",
+      "reveal": "clips/07_reveal.mp3"
+    }
+  },
+  {
+    "q": 8,
+    "number": "08",
+    "title": "하나님의 부르심",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/08_05.mp3",
+      "s1": "clips/08_10.mp3",
+      "s2": "clips/08_15.mp3",
+      "reveal": "clips/08_reveal.mp3"
+    }
+  },
+  {
+    "q": 9,
+    "number": "09",
+    "title": "나의 약함은 나의 자랑이요",
+    "aliases": [
+      "나의 약함은 나의 자랑이요",
+      "나의 약함은"
+    ],
+    "clips": {
+      "s0": "clips/09_05.mp3",
+      "s1": "clips/09_10.mp3",
+      "s2": "clips/09_15.mp3",
+      "reveal": "clips/09_reveal.mp3"
+    }
+  },
+  {
+    "q": 10,
+    "number": "10",
+    "title": "당신은 사랑받기위해 태어난 사람",
+    "aliases": [
+      "당신은 사랑받기 위해 태어난 사람",
+      "사랑받기 위해 태어난 사람"
+    ],
+    "clips": {
+      "s0": "clips/10_05.mp3",
+      "s1": "clips/10_10.mp3",
+      "s2": "clips/10_15.mp3",
+      "reveal": "clips/10_reveal.mp3"
+    }
+  },
+  {
+    "q": 11,
+    "number": "11",
+    "title": "빛으로 비추시네",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/11_05.mp3",
+      "s1": "clips/11_10.mp3",
+      "s2": "clips/11_15.mp3",
+      "reveal": "clips/11_reveal.mp3"
+    }
+  },
+  {
+    "q": 12,
+    "number": "12",
+    "title": "실로암",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/12_05.mp3",
+      "s1": "clips/12_10.mp3",
+      "s2": "clips/12_15.mp3",
+      "reveal": "clips/12_reveal.mp3"
+    }
+  },
+  {
+    "q": 13,
+    "number": "13",
+    "title": "야곱의 축복",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/13_05.mp3",
+      "s1": "clips/13_10.mp3",
+      "s2": "clips/13_15.mp3",
+      "reveal": "clips/13_reveal.mp3"
+    }
+  },
+  {
+    "q": 14,
+    "number": "14",
+    "title": "주의 자비가 내려와",
+    "aliases": [],
+    "clips": {
+      "s0": "clips/14_05.mp3",
+      "s1": "clips/14_10.mp3",
+      "s2": "clips/14_15.mp3",
+      "reveal": "clips/14_reveal.mp3"
+    }
+  },
+  {
+    "q": 15,
+    "number": "17",
+    "title": "빛나는 유산",
+    "aliases": [
+      "빛나는 유산 (시편 16편)",
+      "시편 16편"
+    ],
+    "clips": {
+      "s0": "clips/17_05.mp3",
+      "s1": "clips/17_10.mp3",
+      "s2": "clips/17_15.mp3",
+      "reveal": "clips/17_reveal.mp3"
+    }
+  }
+]
