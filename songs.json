@@ -5,10 +5,10 @@
     "title": "행복",
     "aliases": [],
     "clips": {
-      "s0": "clips/01_05.mp3",
-      "s1": "clips/01_10.mp3",
-      "s2": "clips/01_15.mp3",
-      "reveal": "clips/01_intro20.mp3"
+      "s0": "clips/01_vocal05.mp3",
+      "s1": "clips/01_vocal10.mp3",
+      "s2": "clips/01_vocal15.mp3",
+      "reveal": "clips/01_vocal20.mp3"
     }
   },
   {
@@ -19,10 +19,10 @@
       "어둔 날 다 지나고"
     ],
     "clips": {
-      "s0": "clips/02_05.mp3",
-      "s1": "clips/02_10.mp3",
-      "s2": "clips/02_15.mp3",
-      "reveal": "clips/02_intro20.mp3"
+      "s0": "clips/02_vocal05.mp3",
+      "s1": "clips/02_vocal10.mp3",
+      "s2": "clips/02_vocal15.mp3",
+      "reveal": "clips/02_vocal20.mp3"
     }
   },
   {
@@ -31,10 +31,10 @@
     "title": "하나님의 세계",
     "aliases": [],
     "clips": {
-      "s0": "clips/03_05.mp3",
-      "s1": "clips/03_10.mp3",
-      "s2": "clips/03_15.mp3",
-      "reveal": "clips/03_intro20.mp3"
+      "s0": "clips/03_vocal05.mp3",
+      "s1": "clips/03_vocal10.mp3",
+      "s2": "clips/03_vocal15.mp3",
+      "reveal": "clips/03_vocal20.mp3"
     }
   },
   {
@@ -43,10 +43,10 @@
     "title": "은혜",
     "aliases": [],
     "clips": {
-      "s0": "clips/04_05.mp3",
-      "s1": "clips/04_10.mp3",
-      "s2": "clips/04_15.mp3",
-      "reveal": "clips/04_intro20.mp3"
+      "s0": "clips/04_vocal05.mp3",
+      "s1": "clips/04_vocal10.mp3",
+      "s2": "clips/04_vocal15.mp3",
+      "reveal": "clips/04_vocal20.mp3"
     }
   },
   {
@@ -55,10 +55,10 @@
     "title": "광야를 지나며",
     "aliases": [],
     "clips": {
-      "s0": "clips/05_05.mp3",
-      "s1": "clips/05_10.mp3",
-      "s2": "clips/05_15.mp3",
-      "reveal": "clips/05_intro20.mp3"
+      "s0": "clips/05_vocal05.mp3",
+      "s1": "clips/05_vocal10.mp3",
+      "s2": "clips/05_vocal15.mp3",
+      "reveal": "clips/05_vocal20.mp3"
     }
   },
   {
@@ -67,10 +67,10 @@
     "title": "성령이 오셨네",
     "aliases": [],
     "clips": {
-      "s0": "clips/06_05.mp3",
-      "s1": "clips/06_10.mp3",
-      "s2": "clips/06_15.mp3",
-      "reveal": "clips/06_intro20.mp3"
+      "s0": "clips/06_vocal05.mp3",
+      "s1": "clips/06_vocal10.mp3",
+      "s2": "clips/06_vocal15.mp3",
+      "reveal": "clips/06_vocal20.mp3"
     }
   },
   {
@@ -79,10 +79,10 @@
     "title": "꽃들도",
     "aliases": [],
     "clips": {
-      "s0": "clips/07_05.mp3",
-      "s1": "clips/07_10.mp3",
-      "s2": "clips/07_15.mp3",
-      "reveal": "clips/07_intro20.mp3"
+      "s0": "clips/07_vocal05.mp3",
+      "s1": "clips/07_vocal10.mp3",
+      "s2": "clips/07_vocal15.mp3",
+      "reveal": "clips/07_vocal20.mp3"
     }
   },
   {
@@ -91,10 +91,10 @@
     "title": "하나님의 부르심",
     "aliases": [],
     "clips": {
-      "s0": "clips/08_05.mp3",
-      "s1": "clips/08_10.mp3",
-      "s2": "clips/08_15.mp3",
-      "reveal": "clips/08_intro20.mp3"
+      "s0": "clips/08_vocal05.mp3",
+      "s1": "clips/08_vocal10.mp3",
+      "s2": "clips/08_vocal15.mp3",
+      "reveal": "clips/08_vocal20.mp3"
     }
   },
   {
@@ -106,10 +106,10 @@
       "나의 약함은"
     ],
     "clips": {
-      "s0": "clips/09_05.mp3",
-      "s1": "clips/09_10.mp3",
-      "s2": "clips/09_15.mp3",
-      "reveal": "clips/09_intro20.mp3"
+      "s0": "clips/09_vocal05.mp3",
+      "s1": "clips/09_vocal10.mp3",
+      "s2": "clips/09_vocal15.mp3",
+      "reveal": "clips/09_vocal20.mp3"
     }
   },
   {
@@ -121,10 +121,10 @@
       "사랑받기 위해 태어난 사람"
     ],
     "clips": {
-      "s0": "clips/10_05.mp3",
-      "s1": "clips/10_10.mp3",
-      "s2": "clips/10_15.mp3",
-      "reveal": "clips/10_intro20.mp3"
+      "s0": "clips/10_vocal05.mp3",
+      "s1": "clips/10_vocal10.mp3",
+      "s2": "clips/10_vocal15.mp3",
+      "reveal": "clips/10_vocal20.mp3"
     }
   },
   {
@@ -133,10 +133,10 @@
     "title": "빛으로 비추시네",
     "aliases": [],
     "clips": {
-      "s0": "clips/11_05.mp3",
-      "s1": "clips/11_10.mp3",
-      "s2": "clips/11_15.mp3",
-      "reveal": "clips/11_intro20.mp3"
+      "s0": "clips/11_vocal05.mp3",
+      "s1": "clips/11_vocal10.mp3",
+      "s2": "clips/11_vocal15.mp3",
+      "reveal": "clips/11_vocal20.mp3"
     }
   },
   {
@@ -145,10 +145,10 @@
     "title": "실로암",
     "aliases": [],
     "clips": {
-      "s0": "clips/12_05.mp3",
-      "s1": "clips/12_10.mp3",
-      "s2": "clips/12_15.mp3",
-      "reveal": "clips/12_intro20.mp3"
+      "s0": "clips/12_vocal05.mp3",
+      "s1": "clips/12_vocal10.mp3",
+      "s2": "clips/12_vocal15.mp3",
+      "reveal": "clips/12_vocal20.mp3"
     }
   },
   {
@@ -157,10 +157,10 @@
     "title": "야곱의 축복",
     "aliases": [],
     "clips": {
-      "s0": "clips/13_05.mp3",
-      "s1": "clips/13_10.mp3",
-      "s2": "clips/13_15.mp3",
-      "reveal": "clips/13_intro20.mp3"
+      "s0": "clips/13_vocal05.mp3",
+      "s1": "clips/13_vocal10.mp3",
+      "s2": "clips/13_vocal15.mp3",
+      "reveal": "clips/13_vocal20.mp3"
     }
   },
   {
@@ -169,10 +169,10 @@
     "title": "주의 자비가 내려와",
     "aliases": [],
     "clips": {
-      "s0": "clips/14_05.mp3",
-      "s1": "clips/14_10.mp3",
-      "s2": "clips/14_15.mp3",
-      "reveal": "clips/14_intro20.mp3"
+      "s0": "clips/14_vocal05.mp3",
+      "s1": "clips/14_vocal10.mp3",
+      "s2": "clips/14_vocal15.mp3",
+      "reveal": "clips/14_vocal20.mp3"
     }
   },
   {
@@ -184,10 +184,10 @@
       "시편 16편"
     ],
     "clips": {
-      "s0": "clips/17_05.mp3",
-      "s1": "clips/17_10.mp3",
-      "s2": "clips/17_15.mp3",
-      "reveal": "clips/17_intro20.mp3"
+      "s0": "clips/17_vocal05.mp3",
+      "s1": "clips/17_vocal10.mp3",
+      "s2": "clips/17_vocal15.mp3",
+      "reveal": "clips/17_vocal20.mp3"
     }
   }
 ]

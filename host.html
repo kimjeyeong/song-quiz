@@ -207,7 +207,7 @@
     <div class="answer-reveal">
       <div class="rq" id="rv-q"></div>
       <div class="rt" id="rv-title"></div>
-      <button onclick="playReveal(H.q)">▶ 도입부 20초 다시 듣기</button>
+      <button onclick="playReveal(H.q)">▶ 첫 가사부터 20초 다시 듣기</button>
     </div>
   </section>
 
@@ -352,11 +352,18 @@ function playStage(s) {
   p.play().catch(() => {});
 }
 
+function stopAudio() {
+  const p = $("player");
+  p.pause();
+  p.currentTime = 0;
+}
+
 function playReveal(q) {
   const song = SONGS.find((s) => String(s.q) === String(q));
   if (!song) return;
   const p = $("player");
   p.src = song.clips.reveal;
+  p.currentTime = 0;
   p.play().catch(() => {});
 }
 
@@ -365,11 +372,13 @@ $("btn-next").onclick = next;
 $("btn-prev").onclick = prev;
 $("btn-reset").onclick = () => {
   if (!confirm("모든 팀과 답안을 지우고 처음부터 시작합니다. 계속할까요?")) return;
+  stopAudio();
   localStorage.removeItem(LS);
   roomRef.set({ state: { phase: "lobby", q: 1, stage: 0, total: SONGS.length } });
 };
 
 function next() {
+  stopAudio();
   if (H.phase === "lobby") {
     if (!Object.keys(H.teams).length && !confirm("참가한 팀이 없습니다. 그래도 시작할까요?")) return;
     H.phase = "playing"; H.q = 1; H.stage = 0;
@@ -386,6 +395,7 @@ function next() {
 }
 
 function prev() {
+  stopAudio();
   if (H.phase === "playing") {
     if (H.q > 1) { H.phase = "reveal"; H.q--; }
     else { H.phase = "lobby"; }
@@ -480,7 +490,7 @@ function renderGrade() {
   $("gr-reveals").innerHTML = SONGS.map((song) => `
     <button class="reveal-item" onclick="playReveal(${song.q})">
       <b>${song.q}.</b> ${escapeHtml(song.title)}
-      <small>▶ 도입부 20초 듣기</small>
+      <small>▶ 첫 가사부터 20초 듣기</small>
     </button>`).join("");
 
   const rows = [];
