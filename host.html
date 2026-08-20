@@ -170,7 +170,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="firebase-config.js"></script>
 <script src="common.js"></script>
 <script>
@@ -227,8 +227,10 @@ function start() {
   $("lb-url").textContent = url.replace(/^https?:\/\//, "");
 
   if (window.QRCode) {
-    QRCode.toCanvas(url, { width: 226, margin: 1 }, (err, canvas) => {
-      if (!err && canvas) $("qr").appendChild(canvas);
+    new QRCode($("qr"), {
+      text: url, width: 226, height: 226,
+      colorDark: "#000000", colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M,
     });
   }
 
