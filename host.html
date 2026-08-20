@@ -236,7 +236,7 @@
   <button class="btn-main" id="btn-next">시작하기 ▶</button>
 </footer>
 
-<audio id="player"></audio>
+<audio id="player" preload="auto"></audio>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
@@ -251,6 +251,8 @@ const db = initFirebase();
 const roomRef = db.ref(`rooms/${ROOM}`);
 
 let SONGS = [];
+const audioPreloads = new Map();
+let playRequest = 0;
 let H = {
   room: ROOM, phase: "lobby", q: 1, stage: 0, total: 15,
   teams: {}, answers: {}, overrides: {},
@@ -304,6 +306,8 @@ function start() {
     });
   }
 
+  preloadSong(1);
+
   db.ref(".info/connected").on("value", (snap) => {
     const st = snap.val() ? "online" : "offline";
     const el = $("status");
@@ -346,25 +350,49 @@ function playStage(s) {
   writeState();
   const song = SONGS[H.q - 1];
   if (!song) return;
-  const p = $("player");
-  p.src = song.clips["s" + s];
-  p.currentTime = 0;
-  p.play().catch(() => {});
+  playClip(song.clips["s" + s]);
 }
 
 function stopAudio() {
+  playRequest++;
   const p = $("player");
   p.pause();
-  p.currentTime = 0;
+  p.removeAttribute("src");
+  p.load();
+}
+
+function preloadSong(q) {
+  const song = SONGS[q - 1];
+  if (!song) return;
+  Object.values(song.clips).forEach((src) => {
+    if (audioPreloads.has(src)) return;
+    const audio = new Audio();
+    audio.preload = "auto";
+    audio.src = src;
+    audio.load();
+    audioPreloads.set(src, audio);
+  });
+}
+
+async function playClip(src) {
+  const request = ++playRequest;
+  const p = $("player");
+  p.pause();
+  p.src = src;
+  p.load();
+  try {
+    await p.play();
+  } catch (error) {
+    if (request !== playRequest || error.name === "AbortError") return;
+    console.error("오디오 재생 실패", error);
+    $("ft-info").innerHTML = "<b>재생 실패</b> · 버튼을 한 번 더 눌러주세요";
+  }
 }
 
 function playReveal(q) {
   const song = SONGS.find((s) => String(s.q) === String(q));
   if (!song) return;
-  const p = $("player");
-  p.src = song.clips.reveal;
-  p.currentTime = 0;
-  p.play().catch(() => {});
+  playClip(song.clips.reveal);
 }
 
 /* ---------- 진행 ---------- */
@@ -418,6 +446,8 @@ document.addEventListener("keydown", (e) => {
 
 /* ---------- 화면 ---------- */
 function render() {
+  preloadSong(H.q);
+  preloadSong(H.q + 1);
   ["lobby", "play", "reveal", "grade", "result"].forEach((v) => {
     const on = { lobby: "lobby", playing: "play", reveal: "reveal", grading: "grade", results: "result" }[H.phase] === v;
     $("view-" + v).classList.toggle("hidden", !on);
