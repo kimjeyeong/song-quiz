@@ -133,10 +133,10 @@
     "title": "빛으로 비추시네",
     "aliases": [],
     "clips": {
-      "s0": "clips/11_phrase2_05.wav",
-      "s1": "clips/11_phrase2_10.mp3",
-      "s2": "clips/11_phrase2_15.mp3",
-      "reveal": "clips/11_phrase2_20.mp3"
+      "s0": "clips/11_phrase4_05.wav",
+      "s1": "clips/11_phrase4_10.mp3",
+      "s2": "clips/11_phrase4_15.mp3",
+      "reveal": "clips/11_phrase4_20.mp3"
     }
   },
   {
@@ -157,10 +157,10 @@
     "title": "야곱의 축복",
     "aliases": [],
     "clips": {
-      "s0": "clips/13_phrase2_05.wav",
-      "s1": "clips/13_phrase2_10.mp3",
-      "s2": "clips/13_phrase2_15.mp3",
-      "reveal": "clips/13_phrase2_20.mp3"
+      "s0": "clips/13_phrase4_05.wav",
+      "s1": "clips/13_phrase4_10.mp3",
+      "s2": "clips/13_phrase4_15.mp3",
+      "reveal": "clips/13_phrase4_20.mp3"
     }
   },
   {
@@ -169,10 +169,10 @@
     "title": "주의 자비가 내려와",
     "aliases": [],
     "clips": {
-      "s0": "clips/14_phrase2_05.wav",
-      "s1": "clips/14_phrase2_10.mp3",
-      "s2": "clips/14_phrase2_15.mp3",
-      "reveal": "clips/14_phrase2_20.mp3"
+      "s0": "clips/14_phrase4_05.wav",
+      "s1": "clips/14_phrase4_10.mp3",
+      "s2": "clips/14_phrase4_15.mp3",
+      "reveal": "clips/14_phrase4_20.mp3"
     }
   },
   {

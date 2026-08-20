@@ -238,7 +238,7 @@ let SONGS = [];
 let room = null, teamId = null, teamName = null;
 let state = null, myAnswers = {}, stateRef = null, ansRef = null, roomRef = null;
 
-fetch("songs.json?v=phrase3-20260821").then(r => r.json()).then(j => { SONGS = j; render(); });
+fetch("songs.json?v=phrase4-20260821").then(r => r.json()).then(j => { SONGS = j; render(); });
 
 const $ = (id) => document.getElementById(id);
 const views = ["join", "wait", "play", "reveal", "result"];
