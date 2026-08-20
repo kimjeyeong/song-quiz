@@ -70,6 +70,39 @@
   td.pts  { text-align:right; font-weight:800; }
   tr.me td { background:var(--panel-2); }
   tr.top td.rank { color:var(--amber); }
+
+  /* 밝은 블루 종이놀이 테마 */
+  .logo .big {
+    color: var(--black); font-size: 54px;
+    -webkit-text-stroke: 6px var(--white); paint-order: stroke fill;
+    filter: drop-shadow(4px 5px 0 var(--black));
+  }
+  .logo .sub { color: var(--white); font-size: 22px; text-shadow: 2px 2px 0 #0644b8; }
+  .primary { background:var(--amber); color:var(--black); }
+  .ghost { background:var(--white); color:#0954dc; border-color:var(--black); }
+  .topbar {
+    background:var(--white); color:#0756de; padding:12px 14px;
+    border:3px solid var(--black); border-radius:14px; box-shadow:4px 4px 0 var(--black);
+  }
+  .topbar .score { color:#315fb8; }
+  .qnum { color:var(--white); text-shadow:2px 2px 0 #0645bd; }
+  .qbig {
+    color:var(--black); -webkit-text-stroke:5px var(--white); paint-order:stroke fill;
+    filter:drop-shadow(4px 5px 0 var(--black));
+  }
+  .stagebar div { background:var(--white); color:#2663ce; border:3px solid var(--black); }
+  .stagebar div.on { background:var(--glow); color:var(--black); border-color:var(--black); }
+  .nowpts { color:var(--white); }
+  .nowpts b { color:var(--amber); text-shadow:2px 2px 0 var(--black); }
+  .done { background:var(--white); color:var(--black); border:3px solid var(--black); box-shadow:5px 5px 0 var(--black); }
+  .done .got { color:#167a25; }
+  .wait .dots { color:var(--glow); text-shadow:2px 2px 0 #0645bd; }
+  .wait p { color:var(--white); }
+  #my-result { background:rgba(255,255,255,.95); color:var(--black); border:3px solid var(--black); border-radius:16px; padding:18px; box-shadow:5px 5px 0 var(--black); }
+  #view-result table { background:var(--white); color:var(--black); border:3px solid var(--black); border-radius:14px; overflow:hidden; box-shadow:5px 5px 0 var(--black); }
+  #view-result th { color:#315fb8; }
+  #view-result tr.me td { background:#dceaff; }
+  #view-result tr.top td.rank { color:#075cf5; }
 </style>
 </head>
 <body>

@@ -106,6 +106,53 @@
   .prow.first { border-color: var(--amber); background: var(--panel-2); }
   .prow.first .r { color: var(--amber); }
   .prow.first .n { font-size: 30px; }
+
+  /* 밝은 블루 종이놀이 테마 */
+  main::after {
+    content:"✦"; position:fixed; right:7%; top:7%; color:var(--glow);
+    font-size:44px; line-height:1; pointer-events:none; text-shadow:3px 3px 0 #0645bd;
+  }
+  .host-title {
+    color:var(--black); font-size:52px; font-weight:800; margin-bottom:20px;
+    -webkit-text-stroke:6px var(--white); paint-order:stroke fill;
+    filter:drop-shadow(4px 5px 0 var(--black));
+  }
+  .statusdot { color:var(--white); background:rgba(0,45,150,.55); padding:7px 10px; border-radius:999px; }
+  .roomcode {
+    color:var(--black); -webkit-text-stroke:7px var(--white); paint-order:stroke fill;
+    filter:drop-shadow(5px 6px 0 var(--black));
+  }
+  .joinurl { background:var(--white); color:#0756de; border:3px solid var(--black); box-shadow:5px 5px 0 var(--black); }
+  .teamchip { background:var(--white); color:#0756de; border:3px solid var(--black); box-shadow:4px 4px 0 var(--black); }
+  .teamchip.answered { background:var(--glow); border-color:var(--black); }
+  .teamchip small { color:#416bb7; }
+  h2.sec { color:var(--white); text-shadow:2px 2px 0 #0645bd; }
+  .playhead .qn {
+    color:var(--black); -webkit-text-stroke:6px var(--white); paint-order:stroke fill;
+    filter:drop-shadow(4px 5px 0 var(--black));
+  }
+  .playhead .of { color:var(--white); }
+  .secret { background:var(--white); color:#0756de; border:3px solid var(--black); box-shadow:3px 3px 0 var(--black); }
+  .playbtns button { background:var(--white); color:#0756de; border:3px solid var(--black); box-shadow:5px 5px 0 var(--black); }
+  .playbtns button .p { color:#476da9; }
+  .playbtns button.on { background:var(--glow); border-color:var(--black); }
+  .playbtns button.on .d { color:var(--black); }
+  footer { background:#064bcf; border-top:3px solid rgba(255,255,255,.45); }
+  .btn-main { background:var(--amber); color:var(--black); }
+  .btn-sub, .btn-danger { background:var(--white); color:#0756de; border-color:var(--black); }
+  table.grade { border-collapse:separate; border-spacing:0 5px; }
+  table.grade th { background:#064bcf; color:var(--white); }
+  table.grade td { background:rgba(255,255,255,.96); color:var(--black); border-bottom:0; }
+  table.grade td.correct { color:#31558f; }
+  .reveal-item { background:var(--white); color:#0756de; border-color:var(--black); box-shadow:3px 3px 0 var(--black); }
+  .reveal-item b { color:var(--black); }
+  .reveal-item small { color:#3159b5; }
+  .prow { background:var(--white); color:#0756de; border:3px solid var(--black); box-shadow:5px 5px 0 var(--black); }
+  .prow .r { color:#0756de; }
+  .prow .p { color:var(--black); }
+  .prow .p small { color:#416bb7; }
+  .prow.first { background:var(--glow); border-color:var(--black); }
+  .prow.first .r { color:var(--black); }
 </style>
 </head>
 <body>
@@ -117,6 +164,7 @@
   <section id="view-lobby">
     <div class="lobby">
       <div class="joinbox">
+        <div class="host-title">0.5초 노래 맞히기</div>
         <div class="muted" style="font-size:15px;font-weight:700;">휴대폰으로 접속하세요</div>
         <div class="roomcode" id="lb-code">----</div>
         <div id="qr"></div>
